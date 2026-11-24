@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta
+      name="description"
+      content="一段约三分钟的交互式 3D 叙事，解释悉尼海港大桥在没有现代数字工具的年代如何建成。"
+    />
+    <title>悉尼海港大桥</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M3 22c0 0 4-11 13-11s13 11 13 11' fill='none' stroke='%23e4a24d' stroke-width='2.5' stroke-linecap='round'/%3E%3Cpath d='M6 22h20' stroke='%23e4a24d' stroke-width='2'/%3E%3C/svg%3E"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+SC:wght@400;500;600;700&family=Noto+Serif+SC:wght@600;700;900&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <main id="app">
+      <canvas id="scene" aria-label="悉尼海港大桥建造过程三维场景"></canvas>
+
+      <section id="start-gate" class="start-gate" aria-labelledby="start-title">
+        <div class="start-card">
+          <span class="start-kicker">1923—1932 · 互动施工档案</span>
+          <h1 id="start-title">一座拱桥，<br />怎样跨过海港？</h1>
+          <p>拖动时间轴，观察桥基、临时钢缆、爬行吊机和中央合拢。</p>
+          <div class="start-actions">
+            <button id="start-demo" type="button"><span aria-hidden="true">▶</span> 开始演示</button>
+          </div>
+          <small>拖动时间轴或点击左侧章节，观察每一段施工过程。</small>
+        </div>
+      </section>
+
+      <header class="topbar">
+        <a class="brand" href="#" aria-label="回到演示开头">
+          <span class="brand-mark" aria-hidden="true"></span>
+          <span>
+            <strong>悉尼海港大桥</strong>
+            <small>施工档案 · 1923—1932</small>
+          </span>
+        </a>
+        <div class="top-actions">
+          <button id="force-toggle" class="tool-button" type="button" aria-pressed="true">
+            <span class="tool-dot force-dot"></span>受力示意
+          </button>
+          <button id="camera-toggle" class="tool-button" type="button" aria-pressed="false">
+            <span class="tool-dot camera-dot"></span>自由观察
+          </button>
+          <button id="info-toggle" class="icon-button" type="button" aria-label="打开历史说明" aria-expanded="false">i</button>
+          <button id="fullscreen" class="icon-button fullscreen-icon" type="button" aria-label="进入全屏">⌗</button>
+        </div>
+      </header>
+
+      <aside class="chapter-nav" aria-label="施工章节">
+        <p>施工章节</p>
+        <div id="chapter-list"></div>
+      </aside>
+
+      <section class="narrative" aria-live="polite">
+        <div class="chapter-index" id="chapter-index">00 / 07</div>
+        <p class="eyebrow" id="stage-date">1923 · 悉尼港</p>
+        <h1 id="stage-title">从港湾两岸开始</h1>
+        <div class="stage-fact">
+          <span id="fact-value">503 m</span>
+          <span id="fact-label">主拱跨度</span>
+        </div>
+      </section>
+
+      <p id="subtitle" class="subtitle" aria-live="polite">没有 GPS、塔吊或计算机模型。工程师依靠几何测量、钢缆、铆钉和两台会沿拱架前进的巨型吊机。</p>
+
+      <div id="labels" aria-hidden="true">
+        <div class="scene-label" data-label="bearing"><span></span><b>钢制拱脚支座</b><small>把拱的推力传入两岸</small></div>
+        <div class="scene-label" data-label="bedrock"><span></span><b>砂岩基础</b><small>承受主拱水平推力</small></div>
+        <div class="scene-label" data-label="crane"><span></span><b>爬行吊机</b><small>约 580 吨</small></div>
+        <div class="scene-label cable-label" data-label="cable"><span></span><b>临时钢缆束</b><small>从半拱拉向岸后岩层</small></div>
+        <div class="scene-label" data-label="anchor"><span></span><b>U 形锚固隧道</b><small>深埋在砂岩内</small></div>
+        <div class="scene-label cable-label" data-label="slack"><span></span><b>钢缆卸载</b><small>拉力逐渐归零</small></div>
+        <div class="scene-label" data-label="crown"><span></span><b>中央合拢点</b><small>1930 年 8 月</small></div>
+        <div class="scene-label" data-label="trains"><span></span><b>荷载试验</b><small>史实共使用 96 台机车</small></div>
+      </div>
+
+      <div id="anchor-route" class="anchor-route" hidden>
+        <p>临时钢缆的路径</p>
+        <div><span>半拱端部</span><i>拉住</i><span>桥塔鞍座</span><i>转向</i><span>砂岩隧道</span></div>
+        <small>红色移动光点表示张力从半拱传向岸后的岩层。</small>
+      </div>
+
+      <div id="principle-callout" class="principle-callout" hidden>
+        <b>为什么钢缆拉得住半座拱？</b>
+        <p>完整的拱靠“压”承重；合拢前的半拱却要靠“拉”来固定。钢丝绳从半拱端部拉到岸后砂岩，用拉力抵消半拱向海中倾倒的力矩。</p>
+      </div>
+
+      <div id="tip-warning" class="tip-warning" hidden>
+        <b>⚠ 钢缆失效</b>
+        <span>半拱会向海中倾倒</span>
+      </div>
+
+      <div id="force-legend" class="force-legend" hidden>
+        <span><i class="compression"></i>蓝色 · 拱肋受压</span>
+        <span><i class="tension"></i>红色 · 钢缆受拉</span>
+        <small>颜色仅用于解释受力路径，不代表工程计算结果。</small>
+      </div>
+
+      <aside id="info-panel" class="info-panel" aria-hidden="true">
+        <button id="info-close" class="panel-close" type="button" aria-label="关闭历史说明">×</button>
+        <p class="eyebrow">历史与模型说明</p>
+        <h2>机械时代的精密工程</h2>
+        <p>这座桥不是在“没有工具”的情况下建成的。施工方使用了当时先进的电动爬行吊机、气动铆接设备、液压千斤顶和精密测量仪器。</p>
+        <dl>
+          <div><dt>主拱跨度</dt><dd>503 m</dd></div>
+          <div><dt>拱架开始架设</dt><dd>1928</dd></div>
+          <div><dt>两半拱首次相接</dt><dd>1930.08.19</dd></div>
+          <div><dt>正式开放</dt><dd>1932.03.19</dd></div>
+        </dl>
+        <h3>演示取舍</h3>
+        <p>场景按真实施工原理重建，但钢构件数量、吊装节奏、锚索数量和机车模型均有简化。受力颜色属于教学示意。</p>
+        <h3>资料入口</h3>
+        <ul>
+          <li><a href="https://mhnsw.au/collections/sydney-harbour-bridge/" target="_blank" rel="noreferrer">Museums of History NSW 档案</a></li>
+          <li><a href="https://www.sl.nsw.gov.au/stories/sydney-harbour-bridge" target="_blank" rel="noreferrer">State Library of NSW 专题</a></li>
+          <li><a href="https://www.transport.nsw.gov.au/operations/roads-and-waterways/environment-and-heritage/heritage/sydney-harbour-bridge" target="_blank" rel="noreferrer">Transport for NSW 历史资料</a></li>
+        </ul>
+      </aside>
+      <div id="scrim" class="scrim" hidden></div>
+
+      <footer class="transport">
+        <div class="transport-row">
+          <button id="play-toggle" class="play-button" type="button" aria-label="暂停演示">
+            <span class="pause-symbol" aria-hidden="true"></span>
+          </button>
+          <div class="time-readout"><span id="current-time">00:00</span><i>/</i><span>02:45</span></div>
+          <label class="timeline-wrap" for="timeline">
+            <span class="sr-only">演示时间轴</span>
+            <input id="timeline" type="range" min="0" max="165" step="0.05" value="0" />
+            <span id="timeline-progress"></span>
+            <span id="timeline-markers"></span>
+          </label>
+          <select id="speed" aria-label="播放速度">
+            <option value="1">1×</option>
+            <option value="1.5">1.5×</option>
+            <option value="2" selected>2×</option>
+          </select>
+          <button id="restart" class="restart-button" type="button">重新开始</button>
+        </div>
+        <p class="transport-hint">拖动时间轴探索 · 空格播放/暂停 · 鼠标拖拽观察</p>
+      </footer>
+
+      <div id="webgl-error" class="webgl-error" hidden>
+        <h2>无法启动 3D 场景</h2>
+        <p>请使用支持 WebGL 的新版 Chrome、Safari、Edge 或 Firefox 浏览器。</p>
+      </div>
+    </main>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
