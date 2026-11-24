@@ -1,0 +1,28 @@
+README.md
+  s_ccb54f8b89198e::t_91b6599cc598a6 23-30
+scripts/build-single-file.mjs
+  s_ccb54f8b89198e::t_948956391867fd 12-13,16-17,28-29,31
+  s_ccb54f8b89198e::t_20f4b888b61c9c 25-26,30
+  s_ccb54f8b89198e::t_d546a944aef236 1-11,14-15,18-24,38-46
+  s_ccb54f8b89198e::t_e4a843b2562a28 27,32-37
+vite.config.js
+  s_ccb54f8b89198e::t_5c567bdcea12fa 3-4,9-15
+package.json
+  s_ccb54f8b89198e::t_56a038551bdf59 9
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.52-trip",
+  "base_commit_sha": "a3ce003e189263cb812e31726b50552d1d7a29c9",
+  "prompts": {},
+  "sessions": {
+    "s_ccb54f8b89198e": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "32f497dc-8458-4fc2-9b6e-d5a47a2505ed",
+        "model": "deepseek-v4-1-flash-261017"
+      },
+      "human_author": "Coco Shu <like.shu@trip.com>"
+    }
+  }
+}
