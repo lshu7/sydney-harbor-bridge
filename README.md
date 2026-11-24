@@ -20,6 +20,14 @@ npm run preview
 
 构建结果输出到 `dist/`。
 
+## 单文件版本
+
+```bash
+npm run build:single
+```
+
+生成 `dist/sydney-harbor-bridge.html`：Three.js、样式、脚本全部内联，双击即可在浏览器打开，不需要服务器，适合放进内网 Git 仓库或直接发给别人。
+
 ## 操作
 
 - 首屏“开始演示”：进入约三分钟的施工叙事
